@@ -1,6 +1,7 @@
 package md.mirrerror.pweblab7.repositories;
 
 import md.mirrerror.pweblab7.models.TVSeries;
+import md.mirrerror.pweblab7.models.TVSeriesStatus;
 import md.mirrerror.pweblab7.models.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,4 +17,5 @@ public interface TVSeriesRepository extends CrudRepository<TVSeries, Long> {
     Page<TVSeries> findAll(Pageable pageable);
     List<TVSeries> findAllByUser(User user);
     Page<TVSeries> findAllByUser(User user, Pageable pageable);
+    Page<TVSeries> findAllByUserAndStatus(User user, TVSeriesStatus status, Pageable pageable);
 }
