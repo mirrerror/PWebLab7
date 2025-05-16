@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,5 +18,6 @@ public class TVSeriesDto {
     private String imageLink;
     private String link;
     private Integer rating;
+    private LocalDateTime createdAt;
 
 }
