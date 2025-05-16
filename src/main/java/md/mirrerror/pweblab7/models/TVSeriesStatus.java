@@ -6,8 +6,8 @@ import lombok.Getter;
 public enum TVSeriesStatus {
 
     WATCHING("Watching"),
-    WATCHED("Watched"),
-    PLAN_TO_WATCH("Plan to Watch");
+    PLAN_TO_WATCH("Plan to Watch"),
+    WATCHED("Watched");
 
     private final String displayName;
 

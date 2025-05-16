@@ -19,7 +19,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RequestMapping("/api/series")
@@ -34,7 +36,7 @@ public class TVSeriesController {
     private final TVSeriesMapper tvSeriesMapper;
 
     @GetMapping
-    public ResponseEntity<List<TVSeriesDto>> getAllSeries(@RequestParam(defaultValue = "0") Integer page,
+    public ResponseEntity<Map<String, Object>> getAllSeries(@RequestParam(defaultValue = "0") Integer page,
                                                           @RequestParam(defaultValue = "10") Integer size,
                                                           @RequestParam(defaultValue = "status") String sortBy,
                                                           @RequestParam(defaultValue = "desc") String sortDirection) {
@@ -45,7 +47,13 @@ public class TVSeriesController {
 
         Sort.Direction direction = Sort.Direction.fromString(sortDirection);
         Page<TVSeries> series = tvSeriesService.getSeriesByUser(currentUser.get(), PageRequest.of(page, size, Sort.by(direction, sortBy)));
-        return ResponseEntity.ok(tvSeriesMapper.mapToDtoList(series.getContent()));
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("series", tvSeriesMapper.mapToDtoList(series.getContent()));
+        response.put("totalPages", series.getTotalPages());
+        response.put("totalElements", series.getTotalElements());
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
