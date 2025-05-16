@@ -11,6 +11,9 @@ import md.mirrerror.pweblab7.models.TVSeries;
 import md.mirrerror.pweblab7.models.User;
 import md.mirrerror.pweblab7.services.TVSeriesService;
 import md.mirrerror.pweblab7.services.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,14 +34,18 @@ public class TVSeriesController {
     private final TVSeriesMapper tvSeriesMapper;
 
     @GetMapping
-    public ResponseEntity<List<TVSeriesDto>> getAllSeries() {
+    public ResponseEntity<List<TVSeriesDto>> getAllSeries(@RequestParam(defaultValue = "0") Integer page,
+                                                          @RequestParam(defaultValue = "10") Integer size,
+                                                          @RequestParam(defaultValue = "status") String sortBy,
+                                                          @RequestParam(defaultValue = "desc") String sortDirection) {
         Optional<User> currentUser = userService.loadCurrentUser();
         if (currentUser.isEmpty()) {
             throw new UserNotFoundException("User not found");
         }
 
-        List<TVSeries> series = currentUser.get().getTvSeries();
-        return ResponseEntity.ok(tvSeriesMapper.mapToDtoList(series));
+        Sort.Direction direction = Sort.Direction.fromString(sortDirection);
+        Page<TVSeries> series = tvSeriesService.getSeriesByUser(currentUser.get(), PageRequest.of(page, size, Sort.by(direction, sortBy)));
+        return ResponseEntity.ok(tvSeriesMapper.mapToDtoList(series.getContent()));
     }
 
     @GetMapping("/{id}")
