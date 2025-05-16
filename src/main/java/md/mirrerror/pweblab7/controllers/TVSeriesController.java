@@ -8,11 +8,13 @@ import md.mirrerror.pweblab7.dtos.mappers.TVSeriesMapper;
 import md.mirrerror.pweblab7.exceptions.TVSeriesNotFoundException;
 import md.mirrerror.pweblab7.exceptions.UserNotFoundException;
 import md.mirrerror.pweblab7.models.TVSeries;
+import md.mirrerror.pweblab7.models.TVSeriesStatus;
 import md.mirrerror.pweblab7.models.User;
 import md.mirrerror.pweblab7.services.TVSeriesService;
 import md.mirrerror.pweblab7.services.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,17 +37,33 @@ public class TVSeriesController {
     private final TVSeriesMapper tvSeriesMapper;
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getAllSeries(@RequestParam(defaultValue = "0") Integer page,
-                                                          @RequestParam(defaultValue = "10") Integer size,
-                                                          @RequestParam(defaultValue = "status") String sortBy,
-                                                          @RequestParam(defaultValue = "desc") String sortDirection) {
+    public ResponseEntity<Map<String, Object>> getAllSeries(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(defaultValue = "status") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDirection,
+            @RequestParam(defaultValue = "all") String status) {
+
         Optional<User> currentUser = userService.loadCurrentUser();
         if (currentUser.isEmpty()) {
             throw new UserNotFoundException("User not found");
         }
 
         Sort.Direction direction = Sort.Direction.fromString(sortDirection);
-        Page<TVSeries> series = tvSeriesService.getSeriesByUser(currentUser.get(), PageRequest.of(page, size, Sort.by(direction, sortBy)));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
+
+        Page<TVSeries> series;
+
+        if (status.equalsIgnoreCase("all")) {
+            series = tvSeriesService.getSeriesByUser(currentUser.get(), pageable);
+        } else {
+            try {
+                TVSeriesStatus statusEnum = TVSeriesStatus.valueOf(status.toUpperCase());
+                series = tvSeriesService.getSeriesByUserAndStatus(currentUser.get(), statusEnum, pageable);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Invalid status: " + status);
+            }
+        }
 
         Map<String, Object> response = new HashMap<>();
         response.put("series", tvSeriesMapper.mapToDtoList(series.getContent()));

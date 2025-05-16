@@ -2,6 +2,7 @@ package md.mirrerror.pweblab7.services;
 
 import lombok.RequiredArgsConstructor;
 import md.mirrerror.pweblab7.models.TVSeries;
+import md.mirrerror.pweblab7.models.TVSeriesStatus;
 import md.mirrerror.pweblab7.models.User;
 import md.mirrerror.pweblab7.repositories.TVSeriesRepository;
 import org.springframework.data.domain.Page;
@@ -34,6 +35,10 @@ public class TVSeriesService {
 
     public Page<TVSeries> getSeriesByUser(User user, Pageable pageable) {
         return tvSeriesRepository.findAllByUser(user, pageable);
+    }
+
+    public Page<TVSeries> getSeriesByUserAndStatus(User user, TVSeriesStatus status, Pageable pageable) {
+        return tvSeriesRepository.findAllByUserAndStatus(user, status, pageable);
     }
 
     public Optional<TVSeries> getSeriesById(Long id) {
