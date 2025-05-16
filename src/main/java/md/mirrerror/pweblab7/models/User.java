@@ -36,6 +36,9 @@ public class User implements UserDetails {
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<TVSeries> tvSeries;
+
     public User(String username, String password, String email) {
         this.username = username;
         this.password = password;
