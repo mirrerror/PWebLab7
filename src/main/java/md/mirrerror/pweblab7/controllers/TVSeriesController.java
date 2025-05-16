@@ -83,7 +83,10 @@ public class TVSeriesController {
             throw new TVSeriesNotFoundException("This TV Series are not present in the user's collection");
         }
 
-        TVSeries updatedSeries = tvSeriesService.save(tvSeriesCreationMapper.mapToEntity(seriesDto));
+        TVSeries tvSeries = tvSeriesCreationMapper.mapToEntity(seriesDto);
+        tvSeries.setUser(currentUser.get());
+
+        TVSeries updatedSeries = tvSeriesService.save(tvSeries);
         return ResponseEntity.ok(tvSeriesMapper.mapToDto(updatedSeries));
     }
 
