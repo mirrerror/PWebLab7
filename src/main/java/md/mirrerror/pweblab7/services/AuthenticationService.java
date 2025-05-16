@@ -6,6 +6,7 @@ import md.mirrerror.pweblab7.dtos.RegisterUserDto;
 import md.mirrerror.pweblab7.exceptions.InvalidCredentialsException;
 import md.mirrerror.pweblab7.exceptions.UserNotFoundException;
 import md.mirrerror.pweblab7.exceptions.UserWithThisEmailAlreadyExistsException;
+import md.mirrerror.pweblab7.models.Role;
 import md.mirrerror.pweblab7.models.User;
 import md.mirrerror.pweblab7.repositories.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,6 +33,7 @@ public class AuthenticationService {
         }
 
         User user = new User(input.getUsername(), passwordEncoder.encode(input.getPassword()), input.getEmail());
+        user.setRole(Role.USER);
         return userRepository.save(user);
     }
 
