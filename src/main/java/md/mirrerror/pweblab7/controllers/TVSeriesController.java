@@ -50,7 +50,7 @@ public class TVSeriesController {
 
         Optional<TVSeries> series = tvSeriesService.getSeriesById(id);
         if (series.isEmpty() || !series.get().getUser().equals(currentUser.get())) {
-            throw new TVSeriesNotFoundException("This TV Series are not present in the user's collection");
+            throw new TVSeriesNotFoundException("This TV Series is not present in the user's collection");
         }
 
         return ResponseEntity.ok(tvSeriesMapper.mapToDto(series.get()));
@@ -80,11 +80,13 @@ public class TVSeriesController {
 
         Optional<TVSeries> existingSeries = tvSeriesService.getSeriesById(id);
         if (existingSeries.isEmpty() || !existingSeries.get().getUser().equals(currentUser.get())) {
-            throw new TVSeriesNotFoundException("This TV Series are not present in the user's collection");
+            throw new TVSeriesNotFoundException("This TV Series is not present in the user's collection");
         }
 
         TVSeries tvSeries = tvSeriesCreationMapper.mapToEntity(seriesDto);
+        tvSeries.setId(existingSeries.get().getId());
         tvSeries.setUser(currentUser.get());
+        tvSeries.setCreatedAt(existingSeries.get().getCreatedAt());
 
         TVSeries updatedSeries = tvSeriesService.save(tvSeries);
         return ResponseEntity.ok(tvSeriesMapper.mapToDto(updatedSeries));
@@ -99,7 +101,7 @@ public class TVSeriesController {
 
         Optional<TVSeries> existingSeries = tvSeriesService.getSeriesById(id);
         if (existingSeries.isEmpty() || !existingSeries.get().getUser().equals(currentUser.get())) {
-            throw new TVSeriesNotFoundException("This TV Series are not present in the user's collection");
+            throw new TVSeriesNotFoundException("This TV Series is not present in the user's collection");
         }
 
         tvSeriesService.deleteSeriesById(id);

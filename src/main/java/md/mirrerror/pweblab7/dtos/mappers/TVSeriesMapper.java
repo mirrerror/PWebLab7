@@ -22,6 +22,7 @@ public class TVSeriesMapper implements IMapper<TVSeriesDto, TVSeries> {
         dto.setLink(entity.getLink());
         dto.setImageLink(entity.getImageLink());
         dto.setRating(entity.getRating());
+        dto.setCreatedAt(entity.getCreatedAt());
 
         return dto;
     }
@@ -38,6 +39,7 @@ public class TVSeriesMapper implements IMapper<TVSeriesDto, TVSeries> {
         entity.setLink(dto.getLink());
         entity.setImageLink(dto.getImageLink());
         entity.setRating(dto.getRating());
+        entity.setCreatedAt(dto.getCreatedAt());
 
         return entity;
     }
