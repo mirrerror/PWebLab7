@@ -1,6 +1,7 @@
 package md.mirrerror.pweblab7.services;
 
 import lombok.RequiredArgsConstructor;
+import md.mirrerror.pweblab7.exceptions.UserNotAuthenticatedException;
 import md.mirrerror.pweblab7.models.User;
 import md.mirrerror.pweblab7.repositories.UserRepository;
 import org.springframework.security.core.Authentication;
@@ -47,6 +48,10 @@ public class UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) return Optional.of((User) authentication.getPrincipal());
         return Optional.empty();
+    }
+
+    public Optional<User> loadCurrentUser() {
+        return getUserById(getCurrentUser().orElseThrow(() -> new UserNotAuthenticatedException("The user is not authenticated")).getId());
     }
 
 }
