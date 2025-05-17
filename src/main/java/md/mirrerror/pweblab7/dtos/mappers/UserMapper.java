@@ -23,7 +23,7 @@ public class UserMapper implements IMapper<UserDto, User> {
         dto.setId(user.getId());
         dto.setUsername(user.getUsername());
         dto.setEmail(user.getEmail());
-        dto.setEnabled(user.isEnabled());
+        dto.setRole(user.getRole());
         dto.setBirthDate(user.getBirthDate());
 
         return dto;
