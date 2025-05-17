@@ -1,5 +1,6 @@
 package md.mirrerror.pweblab7.exceptions.handlers;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import md.mirrerror.pweblab7.exceptions.*;
 import md.mirrerror.pweblab7.responses.InformationResponse;
 import org.springframework.http.HttpStatus;
@@ -45,7 +46,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({
-            InsufficientPermissionsException.class
+            InsufficientPermissionsException.class,
+            ExpiredJwtException.class
     })
     public ResponseEntity<InformationResponse> handleForbidden(RuntimeException exception) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
