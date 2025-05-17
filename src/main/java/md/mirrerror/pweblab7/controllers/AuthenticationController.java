@@ -1,5 +1,8 @@
 package md.mirrerror.pweblab7.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import md.mirrerror.pweblab7.dtos.LoginUserDto;
 import md.mirrerror.pweblab7.dtos.RegisterUserDto;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/auth")
 @RestController
+@Tag(name = "Authentication", description = "Endpoints for user authentication")
 @RequiredArgsConstructor
 public class AuthenticationController {
 
@@ -19,13 +23,15 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/signup")
-    public ResponseEntity<RegisterUserDto> register(@RequestBody RegisterUserDto registerUserDto) {
+    @Operation(summary = "Register a new user")
+    public ResponseEntity<RegisterUserDto> register(@RequestBody @Parameter(description = "User registration data") RegisterUserDto registerUserDto) {
         authenticationService.signUp(registerUserDto);
         return ResponseEntity.ok(registerUserDto);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDto loginUserDto) {
+    @Operation(summary = "Authenticate user and return JWT token")
+    public ResponseEntity<LoginResponse> authenticate(@RequestBody @Parameter(description = "User login credentials") LoginUserDto loginUserDto) {
         User authenticatedUser = authenticationService.authenticate(loginUserDto);
         String token = jwtService.generateToken(authenticatedUser);
         long expiresIn = jwtService.getJwtExpirationTime();

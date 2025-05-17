@@ -1,5 +1,8 @@
 package md.mirrerror.pweblab7.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import md.mirrerror.pweblab7.dtos.TVSeriesCreationDto;
 import md.mirrerror.pweblab7.dtos.TVSeriesDto;
@@ -27,6 +30,7 @@ import java.util.Optional;
 
 @RequestMapping("/api/series")
 @RestController
+@Tag(name = "TV Series", description = "Endpoints for managing TV series")
 @RequiredArgsConstructor
 public class TVSeriesController {
 
@@ -37,12 +41,13 @@ public class TVSeriesController {
     private final TVSeriesMapper tvSeriesMapper;
 
     @GetMapping
+    @Operation(summary = "Get all TV series for the current user, with optional filtering")
     public ResponseEntity<Map<String, Object>> getAllSeries(
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "10") Integer size,
-            @RequestParam(defaultValue = "status") String sortBy,
-            @RequestParam(defaultValue = "desc") String sortDirection,
-            @RequestParam(defaultValue = "all") String status) {
+            @RequestParam(defaultValue = "0") @Parameter(description = "Page number") Integer page,
+            @RequestParam(defaultValue = "10") @Parameter(description = "Page size") Integer size,
+            @RequestParam(defaultValue = "status") @Parameter(description = "Sort by field") String sortBy,
+            @RequestParam(defaultValue = "desc") @Parameter(description = "Sort direction") String sortDirection,
+            @RequestParam(defaultValue = "all") @Parameter(description = "Filter by status") String status) {
 
         Optional<User> currentUser = userService.loadCurrentUser();
         if (currentUser.isEmpty()) {
@@ -74,6 +79,7 @@ public class TVSeriesController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get a TV series by ID")
     public ResponseEntity<TVSeriesDto> getSeriesById(@PathVariable Long id) {
         Optional<User> currentUser = userService.loadCurrentUser();
         if (currentUser.isEmpty()) {
@@ -89,6 +95,7 @@ public class TVSeriesController {
     }
 
     @PostMapping
+    @Operation(summary = "Create a new TV series")
     public ResponseEntity<TVSeriesDto> createSeries(@RequestBody TVSeriesCreationDto seriesDto) {
         Optional<User> currentUser = userService.loadCurrentUser();
         if (currentUser.isEmpty()) {
@@ -104,6 +111,7 @@ public class TVSeriesController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Update a TV series by ID")
     public ResponseEntity<TVSeriesDto> updateSeries(@PathVariable Long id, @RequestBody TVSeriesCreationDto seriesDto) {
         Optional<User> currentUser = userService.loadCurrentUser();
         if (currentUser.isEmpty()) {
@@ -125,6 +133,7 @@ public class TVSeriesController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete a TV series by ID")
     public ResponseEntity<Void> deleteSeries(@PathVariable Long id) {
         Optional<User> currentUser = userService.loadCurrentUser();
         if (currentUser.isEmpty()) {
