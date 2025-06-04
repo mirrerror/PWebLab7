@@ -23,7 +23,7 @@ A RestAPI backend service for my application for tracking your favorite TV serie
 
 ## API documentation
 
-You can access the API documentation by opening the Swagger documentation after running the application: [http://localhost:8080/swagger-ui/index.html]
+You can access the API documentation by opening the Swagger documentation after running the application: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
 
 ---
 
